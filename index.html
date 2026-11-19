@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#fdeae9" />
+<meta name="theme-color" content="#a80b52" />
 <title>ST SHOP | دفاتر وهدايا</title>
 <meta name="description" content="ST SHOP | دفاتر أنمي وألعاب، سلاسل مفاتيح، بطاقات وعلب هدايا. توصيل لكل 58 ولاية والدفع عند الاستلام." />
 <meta name="color-scheme" content="light dark" />
@@ -2072,6 +2072,21 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
           <span class="a-hint" id="aSettingsMsg"></span>
         </div>
       </form>
+      <form class="a-settings" id="aPassForm" autocomplete="off" style="margin-top:16px">
+        <div class="a-panel">
+          <h3>كلمة سر الإدارة</h3>
+          <p class="a-hint" id="aPassNote">تتغير كلمة السر في حساب Firebase مباشرة، وتصبح هي المطلوبة عند الدخول من أي جهاز.</p>
+          <div class="a-grid2">
+            <div class="a-field"><label for="aPassOld">كلمة السر الحالية</label><input id="aPassOld" type="password" autocomplete="current-password" required /></div>
+            <div class="a-field"><label for="aPassNew">كلمة السر الجديدة</label><input id="aPassNew" type="password" autocomplete="new-password" minlength="6" required /></div>
+            <div class="a-field"><label for="aPassNew2">تأكيد كلمة السر الجديدة</label><input id="aPassNew2" type="password" autocomplete="new-password" minlength="6" required /></div>
+          </div>
+          <div class="a-form-foot">
+            <button class="a-btn a-btn-hot" type="submit">تغيير كلمة السر</button>
+            <span class="a-hint" id="aPassMsg"></span>
+          </div>
+        </div>
+      </form>
     </section>
   </main>
 
@@ -2236,13 +2251,13 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
    in this browser only.
    ========================================================================== */
 const FIREBASE_CONFIG = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  databaseURL: "https://PASTE_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "PASTE_PROJECT",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyA7oDymZIa4xuQiGlW4pvoOAmTxKE81_rQ",
+  authDomain: "st-shop-8fc4d.firebaseapp.com",
+  databaseURL: "https://st-shop-8fc4d-default-rtdb.firebaseio.com",
+  projectId: "st-shop-8fc4d",
+  storageBucket: "st-shop-8fc4d.firebasestorage.app",
+  messagingSenderId: "382107932885",
+  appId: "1:382107932885:web:bd69e5bfc485b0e423aa5c"
 };
 
 const CLOUDINARY_CONFIG = {
@@ -2250,7 +2265,8 @@ const CLOUDINARY_CONFIG = {
   uploadPreset: ""        // unsigned preset, e.g. "st_shop_products"
 };
 
-const ADMIN_PASSWORD = "123456"; // change this before publishing
+const ADMIN_EMAIL = "stshop@gmail.com"; // Firebase Authentication user used for the admin login
+const ADMIN_PASSWORD = "123456"; // demo mode only (when Firebase is not configured)
 
 /* =============================================================================
    Constants & helpers
@@ -3004,9 +3020,12 @@ function loadScript(src) {
 async function initFirebase() {
   await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");
   await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js");
+  await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js");
   if (!window.firebase) throw new Error("Firebase SDK unavailable");
   if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
   state.db = firebase.database();
+  state.auth = firebase.auth();
+  try { await state.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); } catch (err) { /* ignore */ }
   await new Promise((resolve, reject) => {
     let settled = false;
     const done = (err) => {
@@ -4426,7 +4445,19 @@ let editingReviewImage = "";
 let confirmAction = null;
 
 /* --------------------------------- gate ---------------------------------- */
-function requestAdmin() {
+function currentAuthUser() {
+  return new Promise((resolve) => {
+    const off = state.auth.onAuthStateChanged((user) => { off(); resolve(user); });
+  });
+}
+
+async function requestAdmin() {
+  if (state.mode === "firebase" && state.auth) {
+    const user = await currentAuthUser();
+    if (user && user.email === ADMIN_EMAIL) openAdmin();
+    else openAdminGate();
+    return;
+  }
   let ok = false;
   try { ok = sessionStorage.getItem(ADMIN_KEY) === "1"; } catch (err) { ok = false; }
   if (ok) openAdmin();
@@ -4449,13 +4480,40 @@ function closeAdminGate() {
   document.body.classList.remove("locked");
 }
 
-function submitGate(event) {
+function gateError(message) {
+  $("#gateErr").textContent = message;
+  $("#gateErr").classList.add("on");
+  $("#gatePass").select();
+}
+
+function authErrorMessage(err) {
+  const code = err && err.code ? String(err.code) : "";
+  if (code === "auth/too-many-requests") return "محاولات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.";
+  if (code === "auth/network-request-failed") return "لا يوجد اتصال بالإنترنت.";
+  if (code === "auth/weak-password") return "كلمة السر الجديدة ضعيفة. استعمل 6 أحرف على الأقل.";
+  return "كلمة السر غير صحيحة. حاول مرة أخرى.";
+}
+
+async function submitGate(event) {
   event.preventDefault();
   const value = $("#gatePass").value;
+  if (state.mode === "firebase" && state.auth) {
+    const btn = $("#gateForm button[type=submit]");
+    if (btn) btn.disabled = true;
+    try {
+      await state.auth.signInWithEmailAndPassword(ADMIN_EMAIL, value);
+    } catch (err) {
+      if (btn) btn.disabled = false;
+      gateError(authErrorMessage(err));
+      return;
+    }
+    if (btn) btn.disabled = false;
+    closeAdminGate();
+    openAdmin();
+    return;
+  }
   if (value !== ADMIN_PASSWORD) {
-    $("#gateErr").textContent = "كلمة السر غير صحيحة. حاول مرة أخرى.";
-    $("#gateErr").classList.add("on");
-    $("#gatePass").select();
+    gateError("كلمة السر غير صحيحة. حاول مرة أخرى.");
     return;
   }
   try { sessionStorage.setItem(ADMIN_KEY, "1"); } catch (err) { /* ignore */ }
@@ -4477,8 +4535,39 @@ function closeAdmin() {
   document.body.classList.remove("locked");
   renderAll();
 }
+async function changeAdminPassword(event) {
+  event.preventDefault();
+  const msg = $("#aPassMsg");
+  const say = (text, bad) => { msg.textContent = text; msg.style.color = bad ? "#b3261e" : ""; };
+  const oldPass = $("#aPassOld").value;
+  const newPass = $("#aPassNew").value;
+  const newPass2 = $("#aPassNew2").value;
+  if (newPass.length < 6) { say("كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل.", true); return; }
+  if (newPass !== newPass2) { say("تأكيد كلمة السر غير مطابق.", true); return; }
+  if (state.mode !== "firebase" || !state.auth || !state.auth.currentUser) {
+    say("تغيير كلمة السر يعمل فقط عند الاتصال بـ Firebase.", true);
+    return;
+  }
+  const btn = $("#aPassForm button[type=submit]");
+  if (btn) btn.disabled = true;
+  say("جارٍ التغيير…", false);
+  try {
+    const user = state.auth.currentUser;
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldPass);
+    await user.reauthenticateWithCredential(cred);
+    await user.updatePassword(newPass);
+    $("#aPassForm").reset();
+    say("تم تغيير كلمة السر. استعمل الجديدة في الدخول القادم.", false);
+    toast("تم تغيير كلمة سر الإدارة.");
+  } catch (err) {
+    say(authErrorMessage(err), true);
+  }
+  if (btn) btn.disabled = false;
+}
+
 function signOutAdmin() {
   try { sessionStorage.removeItem(ADMIN_KEY); } catch (err) { /* ignore */ }
+  if (state.auth) state.auth.signOut().catch(() => {});
   closeAdmin();
   toast("تم تسجيل الخروج من لوحة التحكم.");
 }
@@ -5595,6 +5684,7 @@ function bindEvents() {
     else if (form.id === "aReviewForm") saveReviewForm(event);
     else if (form.id === "aBundleForm") saveBundleForm(event);
     else if (form.id === "aSettingsForm") saveSettingsForm(event);
+    else if (form.id === "aPassForm") changeAdminPassword(event);
   });
 
   /* ------------------------------- inputs ------------------------------- */
@@ -5832,7 +5922,7 @@ boot().catch((err) => {
       themeBtn.setAttribute('title',dark?'الوضع النهاري':'الوضع الليلي');
     }
     var meta=document.querySelector('meta[name="theme-color"]');
-    if(meta)meta.setAttribute('content',dark?'#170810':'#fdeae9');
+    if(meta)meta.setAttribute('content','#a80b52');
   }
   if(themeBtn){
     setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light');
