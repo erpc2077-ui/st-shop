@@ -283,7 +283,11 @@ html[dir="ltr"] .hero h1 [data-i18n="hero.titleComma"]{display:none}
   width:min(45%,480px);text-align:start;
 }
 .cat-banner__kicker{font-size:10px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);opacity:.55}
-.cat-banner h3{font-family:var(--font-display);font-size:clamp(25px,3vw,38px);line-height:1.1;margin:6px 0 5px;font-weight:800}
+.cat-banner h3{
+  font-family:var(--font-display);font-size:clamp(25px,3vw,38px);line-height:1.1;margin:6px 0 5px;font-weight:800;
+  color:var(--white);
+  text-shadow:-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),2px 2px 0 var(--ink),0 3px 6px rgba(0,0,0,.35);
+}
 .cat-banner p{font-size:13px;color:var(--ink-soft);line-height:1.65;max-width:36ch}
 .cat-banner__foot{display:flex;align-items:center;gap:11px;margin-top:15px;flex-wrap:wrap}
 .cat-go{
@@ -434,7 +438,7 @@ html[dir="ltr"] .cat-banner__body{right:auto;left:auto;right:5%;text-align:left}
 
 /* ========================= delivery & payment =========================== */
 .policy{padding-top:10px}
-.policy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.policy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .policy-card{
   position:relative;background:var(--white);border:2.5px solid var(--ink);border-radius:16px;
   padding:22px 20px 20px;box-shadow:var(--shadow-sm);
@@ -599,7 +603,11 @@ html:not([dir="rtl"]) .wa-help.show{opacity:1;visibility:visible;transform:trans
 }
 .cat-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:18% 50%}
 .cat-hero__body{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(47%,500px)}
-.cat-hero h1{font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-height:1.08;margin:6px 0 7px;font-weight:800}
+.cat-hero h1{
+  font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-height:1.08;margin:6px 0 7px;font-weight:800;
+  color:var(--white);
+  text-shadow:-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),2px 2px 0 var(--ink),0 3px 6px rgba(0,0,0,.35);
+}
 .cat-hero p{font-size:14px;color:var(--ink-soft);max-width:40ch}
 .cat-hero__meta{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
 .empty-state{
@@ -948,7 +956,7 @@ textarea.input{resize:vertical;min-height:72px}
   .b-add{width:34px;height:34px}
   .b-count{font-size:8.5px;padding:3px 6px;top:8px;inset-inline-start:8px}
 }
-@media (max-width:980px){
+@media (max-width:1100px){
   .policy-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:640px){
@@ -1119,6 +1127,41 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
   padding:8px 13px;font-size:11.5px;
 }
 .a-tb-out:hover{background:var(--a-bad);border-color:var(--a-bad);color:#fff}
+
+/* category banner slideshow */
+.cat-banner img.cs,.cat-hero img.cs{opacity:0;transition:opacity .9s ease,transform .4s ease}
+.cat-banner img.cs.on,.cat-hero img.cs.on{opacity:1}
+/* ===== Admin action buttons: rose, except delete/upload/sign-out ===== */
+#adminRoot .a-btn:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn),
+#adminRoot .a-tb-view{
+  position:relative;
+  background:linear-gradient(150deg,#c01363 0%,#a3094f 52%,#7b073a 100%);
+  border:2px solid #2a0817;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.28);
+  border-radius:15px 11px 14px 10px / 11px 15px 10px 14px;
+  box-shadow:3px 3px 0 #2a0817;animation:none!important;
+}
+#adminRoot .a-btn:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn)::after,
+#adminRoot .a-tb-view::after{
+  content:"";position:absolute;inset:3px;border:1px dashed rgba(255,255,255,.32);
+  border-radius:9px 7px 8px 6px;pointer-events:none;
+}
+#adminRoot .a-btn:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn):hover,
+#adminRoot .a-tb-view:hover{
+  transform:translate(-1px,-2px) rotate(-.4deg);border-color:#2a0817;
+  box-shadow:5px 5px 0 #2a0817;filter:brightness(1.06);
+}
+#adminRoot .a-btn:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn):active,
+#adminRoot .a-tb-view:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #2a0817}
+/* small buttons keep the same look, scaled down */
+#adminRoot .a-btn-sm:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn){
+  border-radius:11px 8px 10px 7px / 8px 11px 7px 10px;
+  box-shadow:2px 2px 0 #2a0817;
+}
+#adminRoot .a-btn-sm:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn)::after{inset:2px}
+#adminRoot .a-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+@media (prefers-reduced-motion:reduce){
+  #adminRoot .a-btn:not(#aSignOut):not(.a-btn-bad):not(.a-file-btn),#adminRoot .a-tb-view{transition:none!important}
+}
 
 /* ---------------------------------- tabs --------------------------------- */
 .a-tabs{
@@ -1530,6 +1573,7 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.1M12 19.7v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.2 12h2.1M19.7 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></symbol>
   <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11z"/><path d="M13.5 10h4.2l3.3 3.3v3.2h-7.5"/><circle cx="7" cy="18.4" r="1.9"/><circle cx="17.4" cy="18.4" r="1.9"/></symbol>
   <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6"/><path d="M2.5 10h19"/><path d="M6 15h4.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 4.5 5.5v6c0 4.7 3 8.4 7.5 10 4.5-1.6 7.5-5.3 7.5-10v-6L12 2.5Z"/><path d="M9 12l2 2 4-4"/></symbol>
 </svg>
 
 <div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading">
@@ -1741,6 +1785,11 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
               <span class="policy-ico" aria-hidden="true"><svg class="ic"><use href="#i-card"/></svg></span>
               <h3 data-i18n="policy.payment">سياسة الدفع</h3>
               <p data-policy="payment"></p>
+            </article>
+            <article class="policy-card" data-policy-card="privacy">
+              <span class="policy-ico" aria-hidden="true"><svg class="ic"><use href="#i-shield"/></svg></span>
+              <h3 data-i18n="policy.privacy">سياسة الخصوصية</h3>
+              <p data-policy="privacy"></p>
             </article>
           </div>
         </div>
@@ -1954,7 +2003,7 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
       </div>
       <div class="a-tablewrap">
         <table class="a-table">
-          <thead><tr><th></th><th>التصنيف</th><th>العنوان الفرعي</th><th>المنتجات</th><th>الترتيب</th><th></th></tr></thead>
+          <thead><tr><th></th><th>التصنيف</th><th>المنتجات</th><th>الترتيب</th><th></th></tr></thead>
           <tbody id="aCatBody"></tbody>
         </table>
       </div>
@@ -2023,48 +2072,26 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
         </div>
         <div class="a-panel">
           <h3>نصوص المتجر</h3>
-          <div class="a-grid2">
-            <div class="a-field"><label for="aSTagAr">شعار التذييل (بالعربية)</label><input id="aSTagAr" /></div>
-            <div class="a-field"><label for="aSTagEn">شعار التذييل (بالإنجليزية)</label><input id="aSTagEn" /></div>
-          </div>
-          <div class="a-grid2">
-            <div class="a-field"><label for="aSDelAr">ملاحظة التوصيل (بالعربية)</label><input id="aSDelAr" /></div>
-            <div class="a-field"><label for="aSDelEn">ملاحظة التوصيل (بالإنجليزية)</label><input id="aSDelEn" /></div>
-          </div>
+          <div class="a-field"><label for="aSTagAr">شعار التذييل</label><input id="aSTagAr" /></div>
+          <div class="a-field"><label for="aSDelAr">ملاحظة التوصيل</label><input id="aSDelAr" /></div>
         </div>
         <div class="a-panel">
           <h3>التوصيل والدفع</h3>
-          <div class="a-langswitch" role="tablist">
-            <button class="on" type="button" data-policy-lang="ar">نسخة عربية</button>
-            <button type="button" data-policy-lang="en">نسخة إنجليزية</button>
+          <div class="a-field">
+            <label for="aSPolShipAr">سياسة الشحن</label>
+            <textarea id="aSPolShipAr" rows="3"></textarea>
           </div>
-          <div data-policy-pane="ar">
-            <div class="a-field">
-              <label for="aSPolShipAr">سياسة الشحن</label>
-              <textarea id="aSPolShipAr" rows="3"></textarea>
-            </div>
-            <div class="a-field">
-              <label for="aSPolDelivAr">سياسة التوصيل</label>
-              <textarea id="aSPolDelivAr" rows="3"></textarea>
-            </div>
-            <div class="a-field">
-              <label for="aSPolPayAr">سياسة الدفع</label>
-              <textarea id="aSPolPayAr" rows="3"></textarea>
-            </div>
+          <div class="a-field">
+            <label for="aSPolDelivAr">سياسة التوصيل</label>
+            <textarea id="aSPolDelivAr" rows="3"></textarea>
           </div>
-          <div data-policy-pane="en" hidden>
-            <div class="a-field">
-              <label for="aSPolShipEn">سياسة الشحن</label>
-              <textarea id="aSPolShipEn" rows="3"></textarea>
-            </div>
-            <div class="a-field">
-              <label for="aSPolDelivEn">سياسة التوصيل</label>
-              <textarea id="aSPolDelivEn" rows="3"></textarea>
-            </div>
-            <div class="a-field">
-              <label for="aSPolPayEn">سياسة الدفع</label>
-              <textarea id="aSPolPayEn" rows="3"></textarea>
-            </div>
+          <div class="a-field">
+            <label for="aSPolPayAr">سياسة الدفع</label>
+            <textarea id="aSPolPayAr" rows="3"></textarea>
+          </div>
+          <div class="a-field">
+            <label for="aSPolPrivAr">سياسة الخصوصية</label>
+            <textarea id="aSPolPrivAr" rows="3"></textarea>
           </div>
         </div>
         <div class="a-form-foot">
@@ -2075,7 +2102,6 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
       <form class="a-settings" id="aPassForm" autocomplete="off" style="margin-top:16px">
         <div class="a-panel">
           <h3>كلمة سر الإدارة</h3>
-          <p class="a-hint" id="aPassNote">تتغير كلمة السر في حساب Firebase مباشرة، وتصبح هي المطلوبة عند الدخول من أي جهاز.</p>
           <div class="a-grid2">
             <div class="a-field"><label for="aPassOld">كلمة السر الحالية</label><input id="aPassOld" type="password" autocomplete="current-password" required /></div>
             <div class="a-field"><label for="aPassNew">كلمة السر الجديدة</label><input id="aPassNew" type="password" autocomplete="new-password" minlength="6" required /></div>
@@ -2111,11 +2137,11 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
           <label>الصور</label>
           <div class="a-images" id="aPImages"></div>
           <div class="a-upload-row">
-            <label class="a-btn a-btn-ghost a-btn-sm a-file-btn">رفع صور<input type="file" id="aPFile" accept="image/*" multiple hidden /></label>
+            <label class="a-btn a-btn-ghost a-btn-sm a-file-btn">رفع صور (حتى 8)<input type="file" id="aPFile" accept="image/*" multiple hidden /></label>
             <span class="a-hint" id="aPUploadHint"></span>
           </div>
           <div class="a-url-row">
-            <input id="aPImgUrl" placeholder="https://… أو assets/products/file.svg" />
+            <input id="aPImgUrl" placeholder="https://…" />
             <button class="a-btn a-btn-ghost a-btn-sm" type="button" id="aPAddUrl">إضافة رابط</button>
           </div>
         </div>
@@ -2135,21 +2161,17 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
         <div class="a-modal-body">
         <input type="hidden" id="aCId" />
         <div class="a-field"><label for="aCName">الاسم</label><input id="aCName" required /></div>
-        <div class="a-grid2">
-          <div class="a-field"><label for="aCSub">العنوان الفرعي (بالعربية)</label><input id="aCSub" /></div>
-          <div class="a-field"><label for="aCSubEn">العنوان الفرعي (بالإنجليزية)</label><input id="aCSubEn" /></div>
-        </div>
         <div class="a-field" style="max-width:140px"><label for="aCOrder">ترتيب العرض</label><input id="aCOrder" type="number" min="0" step="1" value="0" /></div>
         <div class="a-field">
-          <label>صورة البانر</label>
-          <div class="a-cat-preview" id="aCatPreview"></div>
+          <label>صور البانر</label>
+          <div class="a-images" id="aCatPreview"></div>
           <div class="a-upload-row">
-            <label class="a-btn a-btn-ghost a-btn-sm a-file-btn">تغيير الصورة<input type="file" id="aCatFile" accept="image/*" hidden /></label>
+            <label class="a-btn a-btn-ghost a-btn-sm a-file-btn">رفع صور (حتى 8)<input type="file" id="aCatFile" accept="image/*" multiple hidden /></label>
             <span class="a-hint" id="aCatUploadHint"></span>
           </div>
           <div class="a-url-row">
-            <input id="aCatImgUrl" placeholder="https://… أو assets/categories/file.svg" />
-            <button class="a-btn a-btn-ghost a-btn-sm" type="button" id="aCatAddUrl">استعمال الرابط</button>
+            <input id="aCatImgUrl" placeholder="https://…" />
+            <button class="a-btn a-btn-ghost a-btn-sm" type="button" id="aCatAddUrl">إضافة الرابط</button>
           </div>
         </div>
         </div>
@@ -2180,7 +2202,7 @@ body.admin-mode{overflow:hidden;background:#faf5ec;color:#1d1b16}
             <span class="a-hint" id="aRUploadHint"></span>
           </div>
           <div class="a-url-row">
-            <input id="aRImgUrl" placeholder="https://… أو assets/reviews/file.svg" />
+            <input id="aRImgUrl" placeholder="https://…" />
             <button class="a-btn a-btn-ghost a-btn-sm" type="button" id="aRAddUrl">استعمال الرابط</button>
           </div>
         </div>
@@ -2261,8 +2283,8 @@ const FIREBASE_CONFIG = {
 };
 
 const CLOUDINARY_CONFIG = {
-  cloudName: "",          // e.g. "st-shop"
-  uploadPreset: ""        // unsigned preset, e.g. "st_shop_products"
+  cloudName: "qamluj9v",  // Cloudinary cloud name
+  uploadPreset: "ST shop" // unsigned upload preset
 };
 
 const ADMIN_EMAIL = "stshop@gmail.com"; // Firebase Authentication user used for the admin login
@@ -2445,6 +2467,7 @@ const I18N = {
     "policy.shipping": "سياسة الشحن",
     "policy.delivery": "سياسة التوصيل",
     "policy.payment": "سياسة الدفع",
+    "policy.privacy": "سياسة الخصوصية",
     "footer.rights": "© 2026 ST SHOP. كل الحقوق محفوظة.",
     "footer.made": "من الجزائر.",
     "footer.admin": "لوحة التحكم",
@@ -2588,6 +2611,7 @@ const I18N = {
     "policy.shipping": "Shipping policy",
     "policy.delivery": "Delivery policy",
     "policy.payment": "Payment policy",
+    "policy.privacy": "Privacy policy",
     "footer.wa": "WhatsApp",
     "footer.rights": "© 2026 ST SHOP. All rights reserved.",
     "footer.made": "From Algeria.",
@@ -2748,7 +2772,9 @@ const DEFAULT_SETTINGS = {
   deliveryPolicyAr: "التوصيل للمنزل أو لمكتب التوصيل، والسعر يختلف حسب الولاية ويظهر تلقائيًا في السلة.",
   deliveryPolicyEn: "Home or office delivery. The price depends on the wilaya and appears automatically in the cart.",
   paymentAr: "الدفع عند الاستلام، تدفعين فقط لما توصلك الطلبية.",
-  paymentEn: "Cash on delivery — you pay only when your order arrives."
+  paymentEn: "Cash on delivery — you pay only when your order arrives.",
+  privacyAr: "نحترم خصوصيتك. بياناتك تُستخدم فقط لتجهيز طلبك والتواصل معك، ولا تُشارك مع أي طرف ثالث.",
+  privacyEn: "We respect your privacy. Your data is used only to prepare your order and contact you, and is never shared with third parties."
 };
 
 /* -------------------------------- seeds ---------------------------------- */
@@ -2833,17 +2859,21 @@ function asArray(value) {
 }
 function normalizeImageList(value) {
   const list = asArray(value).map((x) => String(x || "").trim()).filter(Boolean);
-  return list.length ? list.slice(0, 7) : [];
+  return list.length ? list.slice(0, 8) : [];
 }
 
 function normalizeCategory(id, raw) {
   const src = raw || {};
+  const mainImage = String(src.image || "").trim();
+  const imgList = normalizeImageList(src.images);
+  const images = imgList.length ? imgList : (mainImage ? [mainImage] : []);
   return {
     id: String(src.id || id),
     name: String(src.name || "").trim() || "تصنيف",
     subtitle: String(src.subtitle || "").trim(),
     subtitleEn: String(src.subtitleEn || "").trim(),
-    image: String(src.image || "").trim() || FALLBACK_CATEGORY,
+    image: images[0] || FALLBACK_CATEGORY,
+    images,
     order: Number(src.order) || 0,
     createdAt: Number(src.createdAt) || Date.now()
   };
@@ -3260,6 +3290,21 @@ function categoryName(cat) {
   if (!cat) return LANG === "en" ? "Uncategorised" : "بدون تصنيف";
   return cat.name;
 }
+function catImgs(cat, loading) {
+  const list = cat && cat.images && cat.images.length ? cat.images : [(cat && cat.image) || FALLBACK_CATEGORY];
+  const multi = list.length > 1;
+  return list.map((src, k) => `<img${multi ? ` class="cs${k === 0 ? " on" : ""}"` : ""} src="${esc(src)}" alt="${esc(categoryName(cat))}" loading="${k === 0 ? loading : "lazy"}" onerror="this.src='${FALLBACK_CATEGORY}'" />`).join("");
+}
+setInterval(() => {
+  if (document.hidden) return;
+  document.querySelectorAll(".cat-banner, .cat-hero").forEach((box) => {
+    const imgs = Array.from(box.querySelectorAll("img.cs"));
+    if (imgs.length < 2) return;
+    const cur = Math.max(0, imgs.findIndex((im) => im.classList.contains("on")));
+    imgs[cur].classList.remove("on");
+    imgs[(cur + 1) % imgs.length].classList.add("on");
+  });
+}, 4000);
 function categorySubtitle(cat) {
   if (!cat) return "";
   return LANG === "en" ? (cat.subtitleEn || cat.subtitle) : cat.subtitle;
@@ -3562,7 +3607,8 @@ function applySettings() {
   const policies = [
     ["shipping", "shippingAr", "shippingEn"],
     ["delivery", "deliveryPolicyAr", "deliveryPolicyEn"],
-    ["payment", "paymentAr", "paymentEn"]
+    ["payment", "paymentAr", "paymentEn"],
+    ["privacy", "privacyAr", "privacyEn"]
   ];
   let hasPolicy = false;
   policies.forEach(([key, arKey, enKey]) => {
@@ -3613,11 +3659,11 @@ function renderCategories() {
     const count = state.products.filter((p) => p.categoryId === cat.id).length;
     return `
       <a class="cat-banner" href="#category/${esc(cat.id)}" style="--i:${i}">
-        <img src="${esc(cat.image || FALLBACK_CATEGORY)}" alt="${esc(categoryName(cat))}" loading="${i < 2 ? "eager" : "lazy"}" onerror="this.src='${FALLBACK_CATEGORY}'" />
+        ${catImgs(cat, i < 2 ? "eager" : "lazy")}
         <div class="cat-banner__body">
           <span class="cat-banner__kicker">ST SHOP · ${String(i + 1).padStart(2, "0")}</span>
           <h3>${esc(categoryName(cat))}</h3>
-          <p>${esc(categorySubtitle(cat))}</p>
+          ${categorySubtitle(cat) ? `<p>${esc(categorySubtitle(cat))}</p>` : ""}
           <div class="cat-banner__foot">
             <span class="cat-go">${esc(t("cat.go"))} <svg class="ic arrow" style="width:14px;height:14px"><use href="#i-arrow"/></svg></span>
             <span class="cat-count">${esc(itemsLabel(count))}</span>
@@ -3666,7 +3712,7 @@ function productCard(product) {
 function renderLatest() {
   const root = $("#latestGrid");
   if (!root) return;
-  const list = state.products.slice(0, 8);
+  const list = state.products;
   if (!list.length) {
     root.innerHTML = `<div class="empty-inline" style="grid-column:1/-1"><b>${esc(t("latest.empty"))}</b><span>${esc(t("cat.emptySub"))}</span></div>`;
     return;
@@ -3882,11 +3928,11 @@ function renderCategoryPage(id) {
     <div class="wrap">
       <a class="back-btn" href="#home"><svg class="ic arrow" style="width:16px;height:16px"><use href="#i-arrow"/></svg> ${esc(t("common.back"))}</a>
       <div class="cat-hero">
-        <img src="${esc(cat.image || FALLBACK_CATEGORY)}" alt="${esc(categoryName(cat))}" onerror="this.src='${FALLBACK_CATEGORY}'" />
+        ${catImgs(cat, "eager")}
         <div class="cat-hero__body">
           <span class="cat-banner__kicker">ST SHOP · ${esc(t("cat.kicker"))}</span>
           <h1>${esc(categoryName(cat))}</h1>
-          <p>${esc(categorySubtitle(cat))}</p>
+          ${categorySubtitle(cat) ? `<p>${esc(categorySubtitle(cat))}</p>` : ""}
           <div class="cat-hero__meta">
             <span class="cat-count">${esc(itemsLabel(products.length))}</span>
             <span class="cat-count">${esc(t("strip.cod"))}</span>
@@ -4707,7 +4753,7 @@ function openProductEditor(id) {
   const catSelect = $("#aPCat");
   catSelect.innerHTML = state.categories.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
   catSelect.value = p ? p.categoryId : (state.categories[0] ? state.categories[0].id : "");
-  editingImages = p && p.images ? p.images.slice(0, 7) : [];
+  editingImages = p && p.images ? p.images.slice(0, 8) : [];
   renderEditingImages();
   $("#aPImgUrl").value = "";
   $("#aPUploadHint").textContent = "";
@@ -4738,7 +4784,7 @@ async function handleProductFiles(fileList) {
   if (!files.length) return;
   const hint = $("#aPUploadHint");
   for (const file of files) {
-    if (editingImages.length >= 7) { toast("الحد الأقصى 7 صور.", true); break; }
+    if (editingImages.length >= 8) { toast("الحد الأقصى 8 صور.", true); break; }
     hint.textContent = `جارٍ رفع ${file.name}…`;
     try {
       const url = await uploadImage(file, "product");
@@ -4775,7 +4821,7 @@ function saveProductForm(event) {
     salePrice: hasDiscount ? salePrice : 0,
     stock,
     categoryId,
-    images: editingImages.length ? editingImages.slice(0, 7) : [FALLBACK_PRODUCT],
+    images: editingImages.length ? editingImages.slice(0, 8) : [FALLBACK_PRODUCT],
     createdAt: existing ? existing.createdAt : Date.now()
   };
   saveProductRecord(product).then(() => {
@@ -4864,7 +4910,7 @@ function renderBundlePicker(bundle) {
 function bundleEditorTotals() {
   const root = $("#aBundleTotal");
   if (!root) return;
-  let price = 0;
+  let auto = 0;
   let full = 0;
   let count = 0;
   $$("#aBundlePicker [data-bundle-pick]").forEach((box) => {
@@ -4873,10 +4919,11 @@ function bundleEditorTotals() {
     if (!product) return;
     const qtyInput = box.closest(".a-bpick").querySelector("[data-bundle-qty]");
     const qty = Math.max(1, Math.min(99, Math.floor(Number(qtyInput.value) || 1)));
-    price += productEffectivePrice(product) * qty;
+    auto += productEffectivePrice(product) * qty;
     full += (Number(product.price) || 0) * qty;
     count += 1;
   });
+  const price = auto;
   const percent = full && price < full ? Math.round(((full - price) / full) * 100) : 0;
   root.innerHTML = `<span>${count} منتج</span><b>${price.toLocaleString("en-US")} دج</b>${percent ? `<span class="a-tag warn">-${percent}%</span>` : ""}`;
 }
@@ -4962,16 +5009,15 @@ function renderAdminCategories() {
   }).join("");
 }
 
+let editingCategoryImages = [];
 function openCategoryEditor(id) {
   editingCategoryId = id || null;
   const c = id ? getCategory(id) : null;
   $("#aCatModalTitle").textContent = c ? "تعديل التصنيف" : "تصنيف جديد";
   $("#aCId").value = c ? c.id : "";
   $("#aCName").value = c ? c.name : "";
-  $("#aCSub").value = c ? (c.subtitle || "") : "";
-  $("#aCSubEn").value = c ? (c.subtitleEn || "") : "";
   $("#aCOrder").value = c ? (c.order || 0) : (state.categories.length + 1);
-  editingCategoryImage = c ? (c.image || FALLBACK_CATEGORY) : FALLBACK_CATEGORY;
+  editingCategoryImages = c ? (c.images && c.images.length ? c.images.slice(0, 8) : (c.image && c.image !== FALLBACK_CATEGORY ? [c.image] : [])) : [];
   renderCategoryPreview();
   $("#aCatImgUrl").value = "";
   $("#aCatUploadHint").textContent = "";
@@ -4982,28 +5028,47 @@ function openCategoryEditor(id) {
 function renderCategoryPreview() {
   const root = $("#aCatPreview");
   if (!root) return;
-  root.innerHTML = `<img src="${esc(editingCategoryImage || FALLBACK_CATEGORY)}" alt="" onerror="this.src='${FALLBACK_CATEGORY}'" />`;
+  if (!editingCategoryImages.length) {
+    root.innerHTML = `<div class="a-image" style="display:grid;place-items:center;color:#8a8172;font-size:10px;text-align:center;padding:8px">لا توجد صورة</div>`;
+    return;
+  }
+  root.innerHTML = editingCategoryImages.map((src, i) => `
+    <div class="a-image">
+      <img src="${esc(src)}" alt="" onerror="this.src='${FALLBACK_CATEGORY}'" />
+      ${i === 0 ? `<span class="a-image__cover">الأولى</span>` : ""}
+      <div class="a-image__tools">
+        ${i > 0 ? `<button type="button" data-cimg-cover="${i}">اجعلها الأولى</button>` : ""}
+        <button type="button" data-cimg-remove="${i}">إزالة</button>
+      </div>
+    </div>`).join("");
 }
 
-async function handleCategoryFile(file) {
-  if (!file || !file.type.startsWith("image/")) return;
+async function handleCategoryFiles(fileList) {
+  const files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"));
+  if (!files.length) return;
   const hint = $("#aCatUploadHint");
-  hint.textContent = `جارٍ رفع ${file.name}…`;
-  try {
-    editingCategoryImage = await uploadImage(file, "category");
-    renderCategoryPreview();
-    hint.textContent = "";
-  } catch (err) {
-    hint.textContent = `فشل الرفع: ${err.message}`;
-    toast(`فشل الرفع: ${err.message}`, true);
+  for (const file of files) {
+    if (editingCategoryImages.length >= 8) { toast("الحد الأقصى 8 صور.", true); break; }
+    hint.textContent = `جارٍ رفع ${file.name}…`;
+    try {
+      const url = await uploadImage(file, "category");
+      editingCategoryImages.push(url);
+      renderCategoryPreview();
+    } catch (err) {
+      hint.textContent = `فشل الرفع: ${err.message}`;
+      toast(`فشل الرفع: ${err.message}`, true);
+      return;
+    }
   }
+  hint.textContent = "";
 }
 
 function saveCategoryForm(event) {
   event.preventDefault();
   const name = $("#aCName").value.trim();
-  const subtitle = $("#aCSub").value.trim();
-  const subtitleEn = $("#aCSubEn").value.trim();
+  const prev = editingCategoryId ? getCategory(editingCategoryId) : null;
+  const subtitle = prev ? (prev.subtitle || "") : "";
+  const subtitleEn = prev ? (prev.subtitleEn || "") : "";
   const order = Math.max(0, Math.floor(Number($("#aCOrder").value) || 0));
   if (!name) { toast("اسم التصنيف مطلوب.", true); return; }
   const existing = editingCategoryId ? getCategory(editingCategoryId) : null;
@@ -5012,7 +5077,8 @@ function saveCategoryForm(event) {
     name,
     subtitle,
     subtitleEn: subtitleEn || subtitle,
-    image: editingCategoryImage || FALLBACK_CATEGORY,
+    image: editingCategoryImages[0] || FALLBACK_CATEGORY,
+    images: editingCategoryImages.slice(0, 8),
     order,
     createdAt: existing ? existing.createdAt : Date.now()
   };
@@ -5336,29 +5402,18 @@ function fillSettingsForm() {
   $("#aSInstagram").value = s.instagram || "";
   $("#aSEmail").value = s.email || "";
   $("#aSTagAr").value = s.taglineAr || "";
-  $("#aSTagEn").value = s.taglineEn || "";
   $("#aSHeroAr").value = s.heroTitleAr || "";
   $("#aSHeroEn").value = s.heroTitleEn || "";
   $("#aSHeroLeadAr").value = s.heroLeadAr || "";
   $("#aSHeroLeadEn").value = s.heroLeadEn || "";
   $("#aSDelAr").value = s.deliveryAr || "";
-  $("#aSDelEn").value = s.deliveryEn || "";
   $("#aSPolShipAr").value = s.shippingAr || "";
-  $("#aSPolShipEn").value = s.shippingEn || "";
   $("#aSPolDelivAr").value = s.deliveryPolicyAr || "";
-  $("#aSPolDelivEn").value = s.deliveryPolicyEn || "";
   $("#aSPolPayAr").value = s.paymentAr || "";
-  $("#aSPolPayEn").value = s.paymentEn || "";
+  $("#aSPolPrivAr").value = s.privacyAr || "";
   setHeroLang("ar");
-  setPolicyLang("ar");
   const msg = $("#aSettingsMsg");
   if (msg) msg.textContent = "";
-}
-
-function setPolicyLang(lang) {
-  const target = lang === "en" ? "en" : "ar";
-  $$("[data-policy-lang]").forEach((btn) => btn.classList.toggle("on", btn.getAttribute("data-policy-lang") === target));
-  $$("[data-policy-pane]").forEach((pane) => { pane.hidden = pane.getAttribute("data-policy-pane") !== target; });
 }
 
 function setHeroLang(lang) {
@@ -5380,19 +5435,21 @@ function saveSettingsForm(event) {
     instagram: $("#aSInstagram").value.trim().replace(/^@/, ""),
     email: $("#aSEmail").value.trim(),
     taglineAr: $("#aSTagAr").value.trim(),
-    taglineEn: $("#aSTagEn").value.trim(),
+    taglineEn: $("#aSTagAr").value.trim(),
     heroTitleAr: $("#aSHeroAr").value.trim(),
     heroTitleEn: $("#aSHeroEn").value.trim(),
     heroLeadAr: $("#aSHeroLeadAr").value.trim(),
     heroLeadEn: $("#aSHeroLeadEn").value.trim(),
     deliveryAr: $("#aSDelAr").value.trim(),
-    deliveryEn: $("#aSDelEn").value.trim(),
+    deliveryEn: $("#aSDelAr").value.trim(),
     shippingAr: $("#aSPolShipAr").value.trim(),
-    shippingEn: $("#aSPolShipEn").value.trim(),
+    shippingEn: $("#aSPolShipAr").value.trim(),
     deliveryPolicyAr: $("#aSPolDelivAr").value.trim(),
-    deliveryPolicyEn: $("#aSPolDelivEn").value.trim(),
+    deliveryPolicyEn: $("#aSPolDelivAr").value.trim(),
     paymentAr: $("#aSPolPayAr").value.trim(),
-    paymentEn: $("#aSPolPayEn").value.trim()
+    paymentEn: $("#aSPolPayAr").value.trim(),
+    privacyAr: $("#aSPolPrivAr").value.trim(),
+    privacyEn: $("#aSPolPrivAr").value.trim()
   };
   saveSettingsRecord(settings).then(() => {
     $("#aSettingsMsg").textContent = "تم الحفظ.";
@@ -5619,7 +5676,7 @@ function bindEvents() {
       const input = $("#aPImgUrl");
       const url = input.value.trim();
       if (!url) return;
-      if (editingImages.length >= 7) { toast("الحد الأقصى 7 صور.", true); return; }
+      if (editingImages.length >= 8) { toast("الحد الأقصى 8 صور.", true); return; }
       editingImages.push(url);
       input.value = "";
       renderEditingImages();
@@ -5629,8 +5686,23 @@ function bindEvents() {
       const input = $("#aCatImgUrl");
       const url = input.value.trim();
       if (!url) return;
-      editingCategoryImage = url;
+      if (editingCategoryImages.length >= 8) { toast("الحد الأقصى 8 صور.", true); return; }
+      editingCategoryImages.push(url);
       input.value = "";
+      renderCategoryPreview();
+      return;
+    }
+    const cImgRemove = target.closest("[data-cimg-remove]");
+    if (cImgRemove) {
+      editingCategoryImages.splice(Number(cImgRemove.getAttribute("data-cimg-remove")), 1);
+      renderCategoryPreview();
+      return;
+    }
+    const cImgCover = target.closest("[data-cimg-cover]");
+    if (cImgCover) {
+      const k = Number(cImgCover.getAttribute("data-cimg-cover"));
+      const picked = editingCategoryImages.splice(k, 1)[0];
+      if (picked) editingCategoryImages.unshift(picked);
       renderCategoryPreview();
       return;
     }
@@ -5654,8 +5726,6 @@ function bindEvents() {
     }
     const heroLangBtn = target.closest("[data-hero-lang]");
     if (heroLangBtn) { setHeroLang(heroLangBtn.getAttribute("data-hero-lang")); return; }
-    const policyLangBtn = target.closest("[data-policy-lang]");
-    if (policyLangBtn) { setPolicyLang(policyLangBtn.getAttribute("data-policy-lang")); return; }
 
     const cancelOrderBtn = target.closest("[data-cancel-order]");
     if (cancelOrderBtn) { cancelOrder(cancelOrderBtn.getAttribute("data-cancel-order")); return; }
@@ -5698,7 +5768,7 @@ function bindEvents() {
       return;
     }
     if (target.id === "aCatFile") {
-      handleCategoryFile(target.files && target.files[0]).then(() => { target.value = ""; });
+      handleCategoryFiles(target.files).then(() => { target.value = ""; });
       return;
     }
     if (target.id === "aRFile") {
