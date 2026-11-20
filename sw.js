@@ -15,7 +15,7 @@
    ============================================================ */
 
 const PREFIX = "stshop-";
-const CACHE = "stshop-v4";
+const CACHE = "stshop-v9";
 const SHELL = ["./", "./index.html"];
 
 const OFFLINE_PAGE = `<!doctype html><html lang="ar" dir="rtl"><head>
